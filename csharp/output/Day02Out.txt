@@ -1,0 +1,2 @@
+The sum of the IDs of valid games is: 2268
+The sum of the power of these sets is: 63542

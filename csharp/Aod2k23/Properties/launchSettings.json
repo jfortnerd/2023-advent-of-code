@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "WSL": {
+      "commandName": "WSL2",
+      "distributionName": ""
+    },
+    "Aod2k23": {
+      "commandName": "Project",
+      "commandLineArgs": "day 2"
+    }
+  }
+}
