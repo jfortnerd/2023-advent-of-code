@@ -1,5 +1,7 @@
 ﻿using Aod2k23.Dailies;
+using Aod2k23.Tests;
 using Jfortnerd.Aod2k23.Dailies;
+using Jfortnerd.Aod2k23.Tests;
 using System;
 using System.IO;
 
@@ -52,10 +54,27 @@ namespace Jfortnerd.Aod2k23
                     int currentDay = ParseDayInt(args[1]);
 
                     if (currentDay != -1) {
-                        RunDailySolution(currentDay);
+                        RunDailySolution(currentDay, false, null);
                     }
                 }
-            } 
+            }
+            // else check if test argument used, and for proper usage
+            else if (args[0].Equals("test"))
+            {
+                if (args.Length == 1)
+                {
+                    DisplayError("Too few arguments found - only use 1 argument for test.", ErrorType.Arguments);
+                }
+                else
+                {
+                    int currentDay = ParseDayInt(args[1]);
+
+                    if (currentDay != -1)
+                    {
+                        TestDailySolution(currentDay);
+                    }
+                }
+            }
             // else check if filegen argument used, and for proper usage
             else if (args[0].Equals("filegen"))
             {
@@ -164,7 +183,35 @@ namespace Jfortnerd.Aod2k23
             Console.WriteLine("Here's some help!");
         }
 
-        private static void RunDailySolution(int currentDay)
+        private static void TestDailySolution(int currentDay)
+        {
+            Test currentTest = null; 
+
+            switch (currentDay)
+            {
+                case 3:
+                    currentTest = new Test03();
+                    break;
+                default:
+                    DisplayError("Test for Day " + currentDay + " not implmented.", ErrorType.NotImplemented);
+                    break;
+            }
+
+            if (currentTest != null)
+            {
+                currentTest.LoadTest();
+
+                foreach (String input in currentTest.Inputs)
+                {
+                    Console.WriteLine(input);
+                    Console.WriteLine("***Begin Test***\n");
+                    RunDailySolution(currentDay, true, input);
+                    Console.WriteLine("***Finished Test***\n");
+                }
+            }
+        }
+
+        private static void RunDailySolution(int currentDay, bool testSolution, String testInput)
         {
             Day currentProblem = null;
 
@@ -176,6 +223,9 @@ namespace Jfortnerd.Aod2k23
                 case 2:
                     currentProblem = new Day02();
                     break;
+                case 3:
+                    currentProblem = new Day03();
+                    break;
                 default:
                     DisplayError("Day " + currentDay + " not implemented.", ErrorType.NotImplemented);
                     break;
@@ -186,11 +236,27 @@ namespace Jfortnerd.Aod2k23
                 DisplayError("Day " + currentDay + " not implemented.", ErrorType.NotImplemented);
             }
 
-            currentProblem.Sample = currentProblem.ReadInputSampleFile(currentDay);
+            if (testSolution)
+            {
+                currentProblem.Sample = testInput;
+            }
+            else
+            {
+                currentProblem.Sample = currentProblem.ReadInputSampleFile(currentDay);
+            }
+            
 
             currentProblem.RunSolution();
 
-            currentProblem.WriteOutputSolutionFile(currentDay);
+            if (!testSolution)
+            {
+                currentProblem.WriteOutputSolutionFile(currentDay);
+            } 
+            else
+            {
+                Console.WriteLine(currentProblem.Solution);
+            }
+            
         }
     }
 }
