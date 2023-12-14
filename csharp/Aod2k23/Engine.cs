@@ -226,6 +226,10 @@ namespace Jfortnerd.Aod2k23
                 case 3:
                     currentProblem = new Day03();
                     break;
+                case 4:
+                    currentProblem = new Day04();
+                    currentProblem = new Day04();
+                    break;
                 default:
                     DisplayError("Day " + currentDay + " not implemented.", ErrorType.NotImplemented);
                     break;
